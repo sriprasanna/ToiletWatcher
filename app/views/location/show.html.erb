@@ -39,10 +39,11 @@
 
       var usage_chart = new google.visualization.AnnotatedTimeLine(document.getElementById('usage_div'));
       usage_chart.draw(usage_data, {
+        colors: [ 'red', 'green' ],
         displayAnnotations: true,
-        fill: 20,
+        fill: 10,
         thickness: 2,
-        zoomStartTime: new Date(<%= raw Date.today.to_json %>)
+        zoomStartTime: new Date(<%= raw Date.yesterday.to_json %>)
       });
 
       var water_level_chart = new google.visualization.AnnotatedTimeLine(document.getElementById('water_level_div'));
@@ -50,7 +51,7 @@
         displayAnnotations: true,
         fill: 20,
         thickness: 2,
-        zoomStartTime: new Date(<%= raw Date.today.to_json %>)
+        zoomStartTime: new Date(<%= raw Date.yesterday.to_json %>)
       });
     }
   </script>

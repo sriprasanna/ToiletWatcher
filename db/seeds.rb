@@ -7,18 +7,27 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 def populate_stats(location)
-  time = Date.tomorrow.to_datetime
   water_level = 100
 
-  toilet_seed = (3..8).to_a
-  wash_basin_seed = (2..5).to_a
-  time_seed = (30..60).to_a
-  water_level_seed = (1..15).to_a
+  (1..4).to_a.reverse.each do |d|
+    time = d.days.ago.to_date.to_datetime
+    water_level = 100 if d != 2
 
-  (1..100).each do
-    time = time - time_seed.sample.minutes
-    water_level = water_level + water_level_seed.sample
-    Stat.create location: location, time: time, toilet_count: toilet_seed.sample, wash_basin_count: wash_basin_seed.sample, water_level: water_level
+    toilet_count = 0
+    wash_basin_count = 0
+
+    toilet_seed = (1 .. (10..15).to_a.sample).to_a
+    wash_basin_seed = (1 .. (5..8).to_a.sample).to_a
+    water_level_seed = (1..15).to_a
+
+    (1..24).each do |i|
+      time = time + 59.minutes
+      water_level = water_level - water_level_seed.sample
+      toilet_count = toilet_count + toilet_seed.sample
+      wash_basin_count = wash_basin_count + wash_basin_seed.sample
+
+      Stat.create location: location, time: time, toilet_count: toilet_count, wash_basin_count: wash_basin_count, water_level: water_level
+    end
   end
 end
 
