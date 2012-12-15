@@ -4,7 +4,7 @@
   </div>
 </div>
 <br><br>
-<h3>Today stats:</h3>
+<h3>Latest Statistics:</h3>
 <div id="locations">
   <table class="table table-hover table-bordered">
     <thead>
@@ -35,7 +35,7 @@
     <div id="location-<%= location.name %>">
       <blockquote>
         <p><%= link_to location.description, location_path(location) %></p>
-        <small>Statistics for Today</small>
+        <small>as of <%= l stat.time, format: :long %></small>
       </blockquote>
 
       <div class="input-append">

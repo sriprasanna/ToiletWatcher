@@ -1,15 +1,17 @@
 namespace :twitter do
   desc "Load data from Twitter Stream"
   task :load => :environment do
-    URL   = "http://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=SanHackTwToilet&count=10"
+    URL   = "http://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=SanHackTwToilet&count=100"
     REGEX = /^(?<toilet_count>\d+) people used the toilet and (?<wash_basin_count>\d+) people washed their hands.*$/
-    last_parsed_ID = 0
+
+    location = Location.find_by_name 'SANHACK2012'
+    location ||= Location.create name: 'SANHACK2012', latitude: 0.322985, longitude: 32.576576, description: 'Sanitation Hackathon'
+    location.stats.delete_all
 
     resp = Net::HTTP.get_response(URI.parse(URL))
     data = resp.body
     results = JSON.parse(data)
-    results.reverse.each do |result|
-      next if last_parsed_ID > result['id']
+    results.each do |result|
       matches = REGEX.match result['text']
       next if matches.nil?
 
@@ -20,8 +22,6 @@ namespace :twitter do
         water_level: 0
       }
 
-      location = Location.find_by_name 'MOA2012'
-      location ||= Location.create name: 'MOA2012', latitude: 0.322985, longitude: 32.576576, description: 'MOA2012'
       stats    = location.stats.build(
         :time => Date.parse(tweet[:time]),
         :toilet_count => tweet[:toilet_count],
@@ -30,7 +30,6 @@ namespace :twitter do
       )
 
       stats.save!
-      last_parsed_ID = result['id']
     end
   end
 end
