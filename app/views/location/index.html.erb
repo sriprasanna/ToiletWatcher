@@ -1,7 +1,61 @@
-<ol>
-  <% @locations.each do |location| %>
-    <li>
-      <%= link_to location.name, location_path(location) %>
-    </li>
+<div id="map_canvas" style="width: 100%; height: 500px; border: 0; margin: 0; padding: 0;">
+</div>
+
+<div style="display: none;">
+  <% Location.all.each do |location| %>
+    <div id="location-<%= location.name %>">
+      <blockquote>
+        <p><%= location.description %></p>
+        <small>Statistics for Today</small>
+      </blockquote>
+
+      <div class="input-append">
+        <input class="span1" type="text" readonly="readonly" value="<%= location.today_stats[:toilet_count] %>" />
+        <span class="add-on">used toilet</span>
+      </div>
+
+      <div class="input-append">
+        <input class="span1" type="text" readonly="readonly" value="<%= location.today_stats[:wash_basin_count] %>" />
+        <span class="add-on">used hand wash</span>
+      </div>
+
+      <div class="input-append">
+        <input class="span1" type="text" readonly="readonly" value="<%= location.today_stats[:water_level] %>" />
+        <span class="add-on">water level</span>
+      </div>
+    </div>
   <% end %>
-</ol>
+</div>
+
+<% content_for :javascript do %>
+
+<script type="text/javascript" language="javascript">
+window.initialize = function() {
+
+  var map = new google.maps.Map(document.getElementById("map_canvas"), { mapTypeId: google.maps.MapTypeId.ROADMAP });
+  var markerBounds = new google.maps.LatLngBounds();
+
+  <% Location.all.each do |location| %>
+    var point = new google.maps.LatLng(<%= location.latitude %>, <%= location.longitude %>);
+    var marker = new google.maps.Marker({
+      position: point,
+      map: map
+    });
+
+    var info = new google.maps.InfoWindow({
+      content: document.getElementById("location-<%= location.name %>"),
+      position: point
+    });
+    info.open(map);
+
+    markerBounds.extend(point);
+  <% end %>
+
+  map.fitBounds(markerBounds);
+  markerBounds = null;
+}
+</script>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBL921GGzypk4jQM5R3IKlkAVjhUVwOjvs&sensor=false&callback=initialize"></script>
+
+<% end %>
