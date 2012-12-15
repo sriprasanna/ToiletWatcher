@@ -1,18 +1,11 @@
 class LocationController < ApplicationController
   def create
     @location = Location.find_or_create_by_name(params[:name])
-    time = DateTime.parse(params[:time])
-    if stat = @location.stats.last and stat.time.strftime("%D") == time.strftime("%D")
-      stat.update_attributes!( :toilet_count => params[:toilet_count],
-                              :wash_basin_count => params[:wash_basin_count],
-                              :water_level => params[:water_level])
-    else
-      stat = @location.stats.build( :time => time,
-                                    :toilet_count => params[:toilet_count],
-                                    :wash_basin_count => params[:wash_basin_count],
-                                    :water_level => params[:water_level])
-      stat.save!
-    end
+    stat = @location.stats.build( :time => Date.parse(params[:time]),
+                                  :toilet_count => params[:toilet_count],
+                                  :wash_basin_count => params[:wash_basin_count],
+                                  :water_level => params[:water_level])
+    stat.save!
 
     head :ok
   end
