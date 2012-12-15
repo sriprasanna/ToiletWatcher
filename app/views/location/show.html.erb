@@ -1,55 +1,53 @@
+<h1><%= @location.name %></h1>
+
 <div class="row">
-  <div class="span12">
-    <h1><%= @location.name %></h1>
-    <div id="chart_div" style="width: 1024px; height: 500px;"></div>
-    <br><br>
-    <table class="table table-hover table-bordered">
-      <thead>
-        <tr>
-          <th>Date Time</th>
-          <th>No. of people used latrine</th>
-          <th>No. of people washed their hands</th>
-          <th>Water level</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @stats.each do |stat| %>
-          <tr>
-            <td><%= stat.time.strftime("%D %R") %></td>
-            <td><%= stat.toilet_count %></td>
-            <td><%= stat.wash_basin_count %></td>
-            <td><%= stat.water_level %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+  <div class="span6">
+    <h3>Usage Statistics</h3>
+    <div id="usage_div" style="width: 100%; height: 500px;"></div>
+  </div>
+
+  <div class="span6">
+    <h3>Water Level Statistics</h3>
+    <div id="water_level_div" style="width: 100%; height: 500px;"></div>
   </div>
 </div>
 
 <% content_for :javascript do %>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript" charset="utf-8">
-    var stats = <%=raw @stats.to_json %>;
-    var statsArray = [];
-    $.each(stats, function(){
-      var time = new Date(this.time);
-      var array = [ time, this.toilet_count, this.wash_basin_count, this.water_level ];
-      statsArray.push(array);
-    });
-  </script>
-  <script type="text/javascript">
+    var usage_array = [], water_level_array = [];
+    <% @stats.each do |stat| %>
+      usage_array.push([ new Date(<%= raw stat.time.to_json %>), <%= stat.toilet_count %>, <%= stat.wash_basin_count %> ]);
+      water_level_array.push([ new Date(<%= raw stat.time.to_json %>), <%= stat.water_level %> ]);
+    <% end %>
+
     google.load('visualization', '1', {'packages':['annotatedtimeline']});
     google.setOnLoadCallback(drawChart);
     function drawChart() {
-      var data = new google.visualization.DataTable();
-      data.addColumn('date', 'Date');
-      data.addColumn('number', 'No. of people used latrine');
-      data.addColumn('number', 'No. of people washed their hands');
-      data.addColumn('number', 'Water level');
+      var usage_data = new google.visualization.DataTable();
+      var water_level_data = new google.visualization.DataTable();
 
-      data.addRows(statsArray);
-      var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
-      chart.draw(data, {displayAnnotations: true});
+      usage_data.addColumn('date', 'Date');
+      usage_data.addColumn('number', 'No. of people used latrine');
+      usage_data.addColumn('number', 'No. of people washed their hands');
+
+      water_level_data.addColumn('date', 'Date');
+      water_level_data.addColumn('number', 'Water level');
+
+      usage_data.addRows(usage_array);
+      water_level_data.addRows(water_level_array);
+
+      var usage_chart = new google.visualization.AnnotatedTimeLine(document.getElementById('usage_div'));
+      usage_chart.draw(usage_data, {
+        displayAnnotations: true,
+        fill: 20
+      });
+
+      var water_level_chart = new google.visualization.AnnotatedTimeLine(document.getElementById('water_level_div'));
+      water_level_chart.draw(water_level_data, {
+        displayAnnotations: true,
+        fill: 20
+      });
     }
   </script>
 

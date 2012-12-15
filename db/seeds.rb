@@ -17,11 +17,8 @@ def populate_stats(location)
   time_seed = (30..60).to_a
 
   (1..100).each do
-    toilet_count = toilet_count + toilet_seed.sample
-    wash_basin_count = wash_basin_count + wash_basin_seed.sample
     time = time + time_seed.sample.minutes
-
-    Stat.create location: location, time: time, toilet_count: toilet_count, wash_basin_count: wash_basin_count, water_level: water_level
+    Stat.create location: location, time: time, toilet_count: toilet_seed.sample, wash_basin_count: wash_basin_seed.sample, water_level: water_level
   end
 end
 
