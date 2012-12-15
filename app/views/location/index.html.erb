@@ -34,7 +34,7 @@
     <% stat = location.today_stats || Stat.new %>
     <div id="location-<%= location.name %>">
       <blockquote>
-        <p><%= location.description %></p>
+        <p><%= link_to location.description, location_path(location) %></p>
         <small>Statistics for Today</small>
       </blockquote>
 

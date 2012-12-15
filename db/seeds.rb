@@ -7,11 +7,11 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 def populate_stats(location)
-  water_level = 100
+  water_level = 250
 
   (1..4).to_a.reverse.each do |d|
     time = d.days.ago.to_date.to_datetime
-    water_level = 100 if d != 2
+    water_level = 250 if d != 2
 
     toilet_count = 0
     wash_basin_count = 0
