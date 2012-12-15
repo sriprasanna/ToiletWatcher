@@ -1,26 +1,30 @@
-<h1><%= @location.name %></h1>
-<div id="chart_div" style="width: 1024px; height: 500px;"></div>
-<br><br>
-<table class="table table-hover table-bordered">
-  <thead>
-    <tr>
-      <th>Date Time</th>
-      <th>No. of people used latrine</th>
-      <th>No. of people washed their hands</th>
-      <th>Water level</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @stats.each do |stat| %>
-      <tr>
-        <td><%= stat.time.strftime("%D %R") %></td>
-        <td><%= stat.toilet_count %></td>
-        <td><%= stat.wash_basin_count %></td>
-        <td><%= stat.water_level %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="row">
+  <div class="span12">
+    <h1><%= @location.name %></h1>
+    <div id="chart_div" style="width: 1024px; height: 500px;"></div>
+    <br><br>
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th>Date Time</th>
+          <th>No. of people used latrine</th>
+          <th>No. of people washed their hands</th>
+          <th>Water level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @stats.each do |stat| %>
+          <tr>
+            <td><%= stat.time.strftime("%D %R") %></td>
+            <td><%= stat.toilet_count %></td>
+            <td><%= stat.wash_basin_count %></td>
+            <td><%= stat.water_level %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 <% content_for :javascript do %>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
