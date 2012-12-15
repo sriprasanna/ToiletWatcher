@@ -3,27 +3,53 @@
     <div id="map_canvas" style="width: 100%; height: 600px; border: 0; margin: 0; padding: 0;"></div>
   </div>
 </div>
+<br><br>
+<h3>Today stats:</h3>
+<div id="locations">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Location</th>
+        <th>No. of people used toilet</th>
+        <th>No. of people washed their hands</th>
+        <th>Water level</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @locations.each do |location| %>
+        <% stat = location.today_stats || Stat.new %>
+        <tr>
+          <td><%= link_to location.name, location_path(location) %></td>
+          <td><%= stat.toilet_count %></td>
+          <td><%= stat.wash_basin_count %></td>
+          <td><%= stat.water_level %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <div style="display: none;">
   <% Location.all.each do |location| %>
+    <% stat = location.today_stats || Stat.new %>
     <div id="location-<%= location.name %>">
       <blockquote>
-        <p><%= link_to location.description, location_path(location) %></p>
+        <p><%= location.description %></p>
         <small>Statistics for Today</small>
       </blockquote>
 
       <div class="input-append">
-        <input class="span1" type="text" readonly="readonly" value="<%= location.today_stats[:toilet_count] %>" />
+        <input class="span1" type="text" readonly="readonly" value="<%= stat.toilet_count %>" />
         <span class="add-on">used toilet</span>
       </div>
 
       <div class="input-append">
-        <input class="span1" type="text" readonly="readonly" value="<%= location.today_stats[:wash_basin_count] %>" />
+        <input class="span1" type="text" readonly="readonly" value="<%= stat.wash_basin_count %>" />
         <span class="add-on">used hand wash</span>
       </div>
 
       <div class="input-append">
-        <input class="span1" type="text" readonly="readonly" value="<%= location.today_stats[:water_level] %>" />
+        <input class="span1" type="text" readonly="readonly" value="<%= stat.water_level %>" />
         <span class="add-on">water level</span>
       </div>
     </div>
