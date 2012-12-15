@@ -17,7 +17,7 @@
     </thead>
     <tbody>
       <% @locations.each do |location| %>
-        <% stat = location.today_stats || Stat.new %>
+        <% stat = location.latest_stat || Stat.new %>
         <tr>
           <td><%= link_to location.name, location_path(location) %></td>
           <td><%= stat.toilet_count %></td>
@@ -31,7 +31,7 @@
 
 <div style="display: none;">
   <% Location.all.each do |location| %>
-    <% stat = location.today_stats || Stat.new %>
+    <% stat = location.latest_stat || Stat.new %>
     <div id="location-<%= location.name %>">
       <blockquote>
         <p><%= link_to location.description, location_path(location) %></p>
@@ -39,17 +39,17 @@
       </blockquote>
 
       <div class="input-append">
-        <input class="span1" type="text" readonly="readonly" value="<%= stat.toilet_count %>" />
+        <span class="span1 uneditable-input"><%= stat.toilet_count %></span>
         <span class="add-on">used toilet</span>
       </div>
 
-      <div class="input-append">
-        <input class="span1" type="text" readonly="readonly" value="<%= stat.wash_basin_count %>" />
+      <div class="input-append <%= 'error' if stat.alert_wash_level? %>">
+        <span class="span1 uneditable-input"><%= stat.wash_basin_count %></span>
         <span class="add-on">used hand wash</span>
       </div>
 
-      <div class="input-append">
-        <input class="span1" type="text" readonly="readonly" value="<%= stat.water_level %>" />
+      <div class="input-append <%= 'error' if stat.alert_water_level? %>">
+        <span class="span1 uneditable-input"><%= stat.water_level %></span>
         <span class="add-on">water level</span>
       </div>
     </div>

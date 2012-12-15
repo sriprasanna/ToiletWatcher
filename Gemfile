@@ -6,6 +6,7 @@ gem 'sqlite3'
 gem 'jquery-rails'
 gem 'eventmachine'
 gem 'tweetstream'
+gem 'json'
 
 gem "therubyracer"
 gem "less-rails"

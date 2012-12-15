@@ -3,12 +3,18 @@
 <div class="row">
   <div class="span6">
     <h3>Usage Statistics</h3>
-    <div id="usage_div" style="width: 100%; height: 500px;"></div>
+    <div id="usage_dashboard">
+      <div id="usage_chart" class="chart"></div>
+      <div id="usage_control" class="control"></div>
+    </div>
   </div>
 
   <div class="span6">
     <h3>Water Level Statistics</h3>
-    <div id="water_level_div" style="width: 100%; height: 500px;"></div>
+    <div id="water_level_dashboard">
+      <div id="water_level_chart" class="chart"></div>
+      <div id="water_level_control" class="control"></div>
+    </div>
   </div>
 </div>
 
@@ -21,38 +27,73 @@
       water_level_array.push([ new Date(<%= raw stat.time.to_json %>), <%= stat.water_level %> ]);
     <% end %>
 
-    google.load('visualization', '1', {'packages':['annotatedtimeline']});
+    google.load('visualization', '1', {'packages':['corechart', 'controls', 'motionchart']});
     google.setOnLoadCallback(drawChart);
-    function drawChart() {
-      var usage_data = new google.visualization.DataTable();
-      var water_level_data = new google.visualization.DataTable();
 
-      usage_data.addColumn('date', 'Date');
+    function drawChart() {
+      drawUsageChart();
+      drawWaterLevelChart();
+    }
+
+    function drawUsageChart() {
+      var usage_data = new google.visualization.DataTable();
+      usage_data.addColumn('datetime', 'Date/Time');
       usage_data.addColumn('number', 'Used latrine');
       usage_data.addColumn('number', 'Washed hands');
-
-      water_level_data.addColumn('date', 'Date');
-      water_level_data.addColumn('number', 'Water level');
-
       usage_data.addRows(usage_array);
+
+      drawDashboard(usage_data, 'usage_control', 'usage_chart', 'usage_dashboard');
+    }
+
+    function drawWaterLevelChart() {
+      var water_level_data = new google.visualization.DataTable();
+      water_level_data.addColumn('datetime', 'Date/Time');
+      water_level_data.addColumn('number', 'Water level');
       water_level_data.addRows(water_level_array);
 
-      var usage_chart = new google.visualization.AnnotatedTimeLine(document.getElementById('usage_div'));
-      usage_chart.draw(usage_data, {
-        colors: [ 'red', 'green' ],
-        displayAnnotations: true,
-        fill: 10,
-        thickness: 2,
-        zoomStartTime: new Date(<%= raw Date.yesterday.to_json %>)
+      drawDashboard(water_level_data, 'water_level_control', 'water_level_chart', 'water_level_dashboard');
+    }
+
+    function drawDashboard(data, control_div, chart_div, dashboard_div) {
+      columns = [{
+        type: 'string',
+        calc: function(dataTable, rowIndex) {
+          return dataTable.getFormattedValue(rowIndex, 0);
+        }
+      }];
+
+      for (var i=1; i<data.getNumberOfColumns(); i++)
+        columns.push(i);
+
+      var control = new google.visualization.ControlWrapper({
+        controlType: 'ChartRangeFilter',
+        containerId: control_div,
+        options: {
+          filterColumnIndex: 0,
+          minRangeSize: 60*60
+        },
+        state: { range: {
+          start: new Date(<%= raw Date.yesterday.to_json %>),
+          end: new Date()
+        } }
       });
 
-      var water_level_chart = new google.visualization.AnnotatedTimeLine(document.getElementById('water_level_div'));
-      water_level_chart.draw(water_level_data, {
-        displayAnnotations: true,
-        fill: 20,
-        thickness: 2,
-        zoomStartTime: new Date(<%= raw Date.yesterday.to_json %>)
+      var chart = new google.visualization.ChartWrapper({
+        chartType: 'AreaChart',
+        containerId: chart_div,
+        dataTable: data,
+        options: {
+          curveType: 'function',
+          chartArea: { height: '85%', width: '90%' },
+          hAxis: { slantedText: false },
+          legend: { position: 'top' }
+        },
+        view: { columns: columns }
       });
+
+      var dashboard = new google.visualization.Dashboard(document.getElementById(dashboard_div));
+      dashboard.bind(control, chart);
+      dashboard.draw(data);
     }
   </script>
 

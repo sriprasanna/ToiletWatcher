@@ -208,6 +208,7 @@ DEPENDENCIES
   devise
   eventmachine
   jquery-rails
+  json
   less-rails
   oj
   pry

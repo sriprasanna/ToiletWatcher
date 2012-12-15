@@ -6,8 +6,12 @@ class Location < ActiveRecord::Base
     name
   end
 
-  def today_stats
+  def latest_stat
     stats.last
+  end
+
+  def map?
+    latitude > 0 and longitude > 0 rescue false
   end
 
 end
