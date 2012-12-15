@@ -41,14 +41,16 @@
       usage_chart.draw(usage_data, {
         displayAnnotations: true,
         fill: 20,
-        thickness: 2
+        thickness: 2,
+        zoomStartTime: new Date(<%= raw Date.today.to_json %>)
       });
 
       var water_level_chart = new google.visualization.AnnotatedTimeLine(document.getElementById('water_level_div'));
       water_level_chart.draw(water_level_data, {
         displayAnnotations: true,
         fill: 20,
-        thickness: 2
+        thickness: 2,
+        zoomStartTime: new Date(<%= raw Date.today.to_json %>)
       });
     }
   </script>
