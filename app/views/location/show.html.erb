@@ -40,13 +40,15 @@
       var usage_chart = new google.visualization.AnnotatedTimeLine(document.getElementById('usage_div'));
       usage_chart.draw(usage_data, {
         displayAnnotations: true,
-        fill: 20
+        fill: 20,
+        thickness: 3
       });
 
       var water_level_chart = new google.visualization.AnnotatedTimeLine(document.getElementById('water_level_div'));
       water_level_chart.draw(water_level_data, {
         displayAnnotations: true,
-        fill: 20
+        fill: 20,
+        thickness: 3
       });
     }
   </script>
