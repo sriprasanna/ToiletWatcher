@@ -13,6 +13,7 @@ gem "twitter-bootstrap-rails"
 
 gem 'rabl'
 gem 'oj'
+gem 'rails_admin'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
@@ -22,4 +23,8 @@ end
 
 group :development do
   gem 'thin'
+  gem 'pry'
 end
+
+
+gem "devise"

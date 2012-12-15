@@ -6,6 +6,7 @@
 
 <div style="display: none;">
   <% Location.all.each do |location| %>
+    <% last_stat = location.stats.last || Stat.new %>
     <div id="location-<%= location.name %>">
       <blockquote>
         <p><%= link_to location.description, location_path(location) %></p>
@@ -13,17 +14,17 @@
       </blockquote>
 
       <div class="input-append">
-        <input class="span1" type="text" readonly="readonly" value="<%= location.today_stats[:toilet_count] %>" />
+        <input class="span1" type="text" readonly="readonly" value="<%= last_stat.toilet_count %>" />
         <span class="add-on">used toilet</span>
       </div>
 
       <div class="input-append">
-        <input class="span1" type="text" readonly="readonly" value="<%= location.today_stats[:wash_basin_count] %>" />
+        <input class="span1" type="text" readonly="readonly" value="<%= last_stat.wash_basin_count %>" />
         <span class="add-on">used hand wash</span>
       </div>
 
       <div class="input-append">
-        <input class="span1" type="text" readonly="readonly" value="<%= location.today_stats[:water_level] %>" />
+        <input class="span1" type="text" readonly="readonly" value="<%= last_stat.water_level %>" />
         <span class="add-on">water level</span>
       </div>
     </div>
