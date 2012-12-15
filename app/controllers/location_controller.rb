@@ -16,5 +16,6 @@ class LocationController < ApplicationController
 
   def show
     @location = Location.find_by_name(params[:id])
+    @stats = @location.stats.order("time DESC")
   end
 end
