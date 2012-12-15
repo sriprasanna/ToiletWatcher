@@ -1,9 +1,25 @@
 <h1><%= @location.name %></h1>
 
+<div class="alert-group">
+  <% if @location.latest_stat.alert_water_level? %>
+    <div class="alert">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Warning!</strong> Water level is low!
+    </div>
+  <% end %>
+
+  <% if @location.latest_stat.alert_wash_level? %>
+    <div class="alert">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Warning!</strong> <%= number_to_percentage @location.latest_stat.wash_level %> of people are not washing hands after using sanitary facilities!
+    </div>
+  <% end %>
+</div>
+
 <div class="row">
   <div class="span6">
     <h3>Usage Statistics</h3>
-    <div id="usage_dashboard">
+    <div id="usage_dashboard" class="well">
       <div id="usage_chart" class="chart"></div>
       <div id="usage_control" class="control"></div>
     </div>
@@ -11,7 +27,7 @@
 
   <div class="span6">
     <h3>Water Level Statistics</h3>
-    <div id="water_level_dashboard">
+    <div id="water_level_dashboard" class="well">
       <div id="water_level_chart" class="chart"></div>
       <div id="water_level_control" class="control"></div>
     </div>

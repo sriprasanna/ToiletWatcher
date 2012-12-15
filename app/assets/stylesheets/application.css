@@ -17,3 +17,6 @@
 
 .input-append.error span { border-color: #B94A48; color: #B94A48; }
 .input-append.error span.uneditable-input { font-weight: bold; }
+
+.alert-group { margin-bottom: 20px; }
+.alert-group > div { margin-bottom: 5px !important; }
