@@ -65,19 +65,25 @@ window.initialize = function() {
   var markerBounds = new google.maps.LatLngBounds();
 
   <% Location.all.each do |location| %>
-    var point = new google.maps.LatLng(<%= location.latitude %>, <%= location.longitude %>);
-    var marker = new google.maps.Marker({
-      position: point,
-      map: map
-    });
+    (function(){
+      var point = new google.maps.LatLng(<%= location.latitude %>, <%= location.longitude %>);
+      var marker = new google.maps.Marker({
+        position: point,
+        map: map
+      });
 
-    var info = new google.maps.InfoWindow({
-      content: document.getElementById("location-<%= location.name %>"),
-      position: point
-    });
-    info.open(map);
+      var info = new google.maps.InfoWindow({
+        content: document.getElementById("location-<%= location.name %>"),
+        position: point
+      });
+      info.open(map);
 
-    markerBounds.extend(point);
+      markerBounds.extend(point);
+
+      google.maps.event.addListener(marker, 'click', function() {
+        info.open(map,marker);
+      });
+    })();
   <% end %>
 
   map.fitBounds(markerBounds);
