@@ -20,3 +20,11 @@
 
 .alert-group { margin-bottom: 20px; }
 .alert-group > div { margin-bottom: 5px !important; }
+div.danger{
+  padding: 10px;
+  background: red !important;
+}
+
+div.danger a, div.danger p{
+  color: white !important;
+}

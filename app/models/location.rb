@@ -7,7 +7,7 @@ class Location < ActiveRecord::Base
   end
 
   def latest_stat
-    stats.last
+    stats.all.last
   end
 
   def map?

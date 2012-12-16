@@ -32,7 +32,7 @@
 <div style="display: none;">
   <% Location.all.each do |location| %>
     <% stat = location.latest_stat || Stat.new %>
-    <div id="location-<%= location.name %>">
+    <div id="location-<%= location.name %>" class="<%= 'danger' if stat.water_level < 25 %>">
       <blockquote>
         <p><%= link_to location.description, location_path(location) %></p>
         <small>as of <%= l stat.time, format: :long %></small>
@@ -66,7 +66,7 @@ window.initialize = function() {
 
   <% Location.all.each do |location| %>
     (function(){
-      var point = new google.maps.LatLng(<%= location.latitude %>, <%= location.longitude %>);
+      var point = new google.maps.LatLng(<%= location.latitude || 0 %>, <%= location.longitude || 0 %>);
       var marker = new google.maps.Marker({
         position: point,
         map: map
