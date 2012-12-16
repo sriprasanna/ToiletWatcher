@@ -23,6 +23,8 @@ def populate_stats(location)
     (1..24).each do |i|
       time = time + 59.minutes
       water_level = water_level - water_level_seed.sample
+      water_level = 0 if water_level < 0
+      
       toilet_count = toilet_count + toilet_seed.sample
       wash_basin_count = wash_basin_count + wash_basin_seed.sample
 

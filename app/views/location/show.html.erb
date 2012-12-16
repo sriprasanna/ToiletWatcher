@@ -89,8 +89,8 @@
           minRangeSize: 60*60
         },
         state: { range: {
-          start: new Date(<%= raw Date.yesterday.to_json %>),
-          end: new Date()
+          start: new Date(<%= raw (@stats.last.time - 1.day).to_json %>),
+          end: new Date(<%= raw @stats.last.time.to_json %> )
         } }
       });
 
